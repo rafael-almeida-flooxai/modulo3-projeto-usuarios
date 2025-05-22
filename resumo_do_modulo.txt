@@ -1,0 +1,13 @@
+Aula 29 - Modulo 3
+
+Explicacao sobre script incorporado e arquivo externo na pratica, diretamente no projeto
+
+Aula 30 
+
+Manipulacao do DOM Document, Object, Model
+
+Aula 31
+
+Aprendendo mais sobre variaveis
+Modificacao no arquivo index.js
+Otimizacao de codigo
