@@ -11,3 +11,29 @@ Aula 31
 Aprendendo mais sobre variaveis
 Modificacao no arquivo index.js
 Otimizacao de codigo
+
+Aula 32
+
+Aprendendo como referenciar classes e IDS no Js
+
+Aula 33 
+
+Codigo abstrato e for each
+
+Aula 34
+
+If e Else, explicacao sobre a pratica do index.js
+Puxando o Gender de maneira correta
+
+Aula 35
+
+Trabalhando com Json
+
+Aula 36
+
+Eventos no JavaScript
+
+Aula 37
+
+
+
