@@ -65,6 +65,18 @@ Aula 44
 
 Criando os gets e sets no User.js
 
+Aula 45
+
+Criando metodos estaticos no UserController.js
+
+Aula 46
+
+Validando formularios com required
+
+Aula 47
+
+
+
 
 
 
