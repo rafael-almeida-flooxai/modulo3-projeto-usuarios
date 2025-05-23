@@ -51,6 +51,20 @@ Explicando o operador spread
 
 Aula 41
 
+File Reader adicionado
+
+Aula 42
+
+Adicionando Promise no codigo
+
+Aula 43
+
+Operador ternario IF adicionado no UserController.js
+
+Aula 44 
+
+Criando os gets e sets no User.js
+
 
 
 
