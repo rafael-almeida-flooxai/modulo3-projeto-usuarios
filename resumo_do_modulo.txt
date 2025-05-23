@@ -35,5 +35,23 @@ Eventos no JavaScript
 
 Aula 37
 
+Funções adicionadas ao código
+
+Aula 38
+
+Criaçao do UserController.js e boas práticas no código
+
+Aula 39
+
+Criação de metódos para chamada facilitada
+
+Aula 40
+
+Explicando o operador spread
+
+Aula 41
+
+
+
 
 
