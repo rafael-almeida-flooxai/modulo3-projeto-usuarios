@@ -213,7 +213,7 @@ class UserController {
                 <td>${Utils.dateFormat(dataUser.register)}</td>
                 <td>
                 <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
-                <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
+                <button type="button" class="btn btn-danger btn-delete btn-xs btn-flat">Excluir</button>
             </td>
     `;
 
@@ -226,90 +226,105 @@ class UserController {
     }
 
     addEventsTr(tr) {
-        tr.querySelector(".btn-edit").addEventListener("click", e => {
 
-            let json = JSON.parse(tr.dataset.user);
+        tr.querySelector(".btn-delete").addEventListener("click", e => {
 
-            this.formUpdateEl.dataset.trIndex = tr.sectionRowIndex;
+            if (confirm("Deseja realmente excluir?")) {
 
-            for (let name in json) {
+                tr.remove(); 
 
-                let field = this.formUpdateEl.querySelector("[name=" + name.replace("_", "") + "]")
+                this.updateCount(); 
+
+            } else {
+
+            }
+
+        })
+
+            tr.querySelector(".btn-edit").addEventListener("click", e => {
+
+                let json = JSON.parse(tr.dataset.user);
+
+                this.formUpdateEl.dataset.trIndex = tr.sectionRowIndex;
+
+                for (let name in json) {
+
+                    let field = this.formUpdateEl.querySelector("[name=" + name.replace("_", "") + "]")
 
 
 
-                if (field) {
+                    if (field) {
 
-                    if (field.type == 'file') continue;
+                        if (field.type == 'file') continue;
 
-                    switch (field.type) {
-                        case 'file':
-                            continue;
-                            break;
+                        switch (field.type) {
+                            case 'file':
+                                continue;
+                                break;
 
-                        case 'radio':
-                            field = form.querySelector("[name=" + name.replace("_", "") + "][value=" + json[name] + "]");
-                            if (field) {
-                                field.checked = true;
-                            } else {
-                                console.warn(`Campo do tipo radio não encontrado para name=${name} e value=${json[name]}`);
-                            }
-                            break;
+                            case 'radio':
+                                field = form.querySelector("[name=" + name.replace("_", "") + "][value=" + json[name] + "]");
+                                if (field) {
+                                    field.checked = true;
+                                } else {
+                                    console.warn(`Campo do tipo radio não encontrado para name=${name} e value=${json[name]}`);
+                                }
+                                break;
 
-                        case 'checkbox':
-                            field.checked = json[name];
-                            break;
+                            case 'checkbox':
+                                field.checked = json[name];
+                                break;
 
-                        default:
-                            field.value = json[name];
-                            break;
+                            default:
+                                field.value = json[name];
+                                break;
+                        }
+
                     }
 
                 }
 
-            }
+                this.formUpdateEl.querySelector(".photo").src = json._photo;
 
-            this.formUpdateEl.querySelector(".photo").src = json._photo;
+                this.showPanelUpdate();
 
-            this.showPanelUpdate();
-
-        })
-    }
+            })
+        }
 
     showPanelCreate() {
-        document.querySelector("#box-user-create").style.display = "block";
-        document.querySelector("#box-user-update").style.display = "none";
-    }
+            document.querySelector("#box-user-create").style.display = "block";
+            document.querySelector("#box-user-update").style.display = "none";
+        }
 
     showPanelUpdate() {
-        document.querySelector("#box-user-create").style.display = "none";
-        document.querySelector("#box-user-update").style.display = "block";
-    }
+            document.querySelector("#box-user-create").style.display = "none";
+            document.querySelector("#box-user-update").style.display = "block";
+        }
 
     updateCount() {
 
-        let numberUsers = 0;
-        let numberAdmin = 0;
+            let numberUsers = 0;
+            let numberAdmin = 0;
 
-        [...this.tableEl.children].forEach(tr => {
+            [...this.tableEl.children].forEach(tr => {
 
-            numberUsers++;
+                numberUsers++;
 
-            console.log
+                console.log
 
-            try {
-                if (!tr.dataset.user) return;
-                let user = JSON.parse(tr.dataset.user);
-                if (user._admin) numberAdmin++;
-            } catch (e) {
-                console.warn('Erro ao interpretar dados do usuário:', e);
-            }
+                try {
+                    if (!tr.dataset.user) return;
+                    let user = JSON.parse(tr.dataset.user);
+                    if (user._admin) numberAdmin++;
+                } catch (e) {
+                    console.warn('Erro ao interpretar dados do usuário:', e);
+                }
 
-        });
+            });
 
-        document.querySelector("#number-users").innerHTML = numberUsers;
-        document.querySelector("#number-users-admin").innerHTML = numberAdmin;
+            document.querySelector("#number-users").innerHTML = numberUsers;
+            document.querySelector("#number-users-admin").innerHTML = numberAdmin;
 
-    }
+        }
 
 }
