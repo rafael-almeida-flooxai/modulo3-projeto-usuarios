@@ -8,6 +8,7 @@ class UserController {
 
         this.onSubmit();
         this.onEdit();
+        this.selectAll();
 
     }
 
@@ -45,19 +46,11 @@ class UserController {
                         result._photo = content;
                     }
 
-                    tr.dataset.user = JSON.stringify();
+                    let user = new User();
 
-                    tr.innerHTML = `
-                <td><img src="${values._photo}" alt="User Image" class="img-circle img-sm"></td>
-                <td>${values._name}</td>
-                <td>${values._email}</td>
-                <td>${(values._admin) ? 'Sim' : 'Não'}</td>
-                <td>${Utils.dateFormat(values._register)}</td>
-                <td>
-                <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
-                <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
-            </td>
-        `;
+                    user.loadFromJSON(result);
+
+                    this.getTr(user, tr);
 
                     this.addEventsTr();
                     this.updateCount();
@@ -199,9 +192,36 @@ class UserController {
 
     }
 
+    getUsersStorage() {
+        let users = [];
+
+        if (sessionStorage.getItem("users")) {
+
+            users = JSON.parse(sessionStorage.getItem("users"));
+
+        }
+        return users;
+    }
+
+    selectAll() {
+
+        let users = this.getUsersStorage();
+
+        users.forEach(dataUser => {
+
+            let user = new User();
+
+            user.loadFromJSON(dataUser);
+
+            this.addLine(user);
+
+        });
+
+    }
+
     insert(data) {
 
-              let users = [];
+        let users = [];
 
         if (sessionStorage.getItem("users")) {
 
@@ -209,21 +229,31 @@ class UserController {
 
         }
 
-  
-
         users.push(data);
 
-        sessionStorage.setItem("user", JSON.stringify(users)); 
+        sessionStorage.setItem("user", JSON.stringify(users));
 
     }
 
     addLine(dataUser) {
 
-        let tr = document.createElement('tr');
+        let tr = this.getTr(dataUser);
 
-        this.insert();
+        
+
+        
+
+        this.tableEl.appendChild(tr);
+
+        this.updateCount();
+
+    }
+
+    getTr(dataUse, tr = null) {
 
         tr.dataset.user = JSON.stringify(dataUser);
+
+        if (tr == null) tr = document.createElement('tr');
 
         tr.innerHTML = `
                 <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
@@ -237,11 +267,9 @@ class UserController {
             </td>
     `;
 
-        this.addEventsTr(tr);
+        this.addEventsTr();
 
-        this.tableEl.appendChild(tr);
-
-        this.updateCount();
+        return tr;
 
     }
 
@@ -251,9 +279,9 @@ class UserController {
 
             if (confirm("Deseja realmente excluir?")) {
 
-                tr.remove(); 
+                tr.remove();
 
-                this.updateCount(); 
+                this.updateCount();
 
             } else {
 
@@ -261,90 +289,90 @@ class UserController {
 
         })
 
-            tr.querySelector(".btn-edit").addEventListener("click", e => {
+        tr.querySelector(".btn-edit").addEventListener("click", e => {
 
-                let json = JSON.parse(tr.dataset.user);
+            let json = JSON.parse(tr.dataset.user);
 
-                this.formUpdateEl.dataset.trIndex = tr.sectionRowIndex;
+            this.formUpdateEl.dataset.trIndex = tr.sectionRowIndex;
 
-                for (let name in json) {
+            for (let name in json) {
 
-                    let field = this.formUpdateEl.querySelector("[name=" + name.replace("_", "") + "]")
+                let field = this.formUpdateEl.querySelector("[name=" + name.replace("_", "") + "]")
 
 
 
-                    if (field) {
+                if (field) {
 
-                        if (field.type == 'file') continue;
+                    if (field.type == 'file') continue;
 
-                        switch (field.type) {
-                            case 'file':
-                                continue;
-                                break;
+                    switch (field.type) {
+                        case 'file':
+                            continue;
+                            break;
 
-                            case 'radio':
-                                field = form.querySelector("[name=" + name.replace("_", "") + "][value=" + json[name] + "]");
-                                if (field) {
-                                    field.checked = true;
-                                } else {
-                                    console.warn(`Campo do tipo radio não encontrado para name=${name} e value=${json[name]}`);
-                                }
-                                break;
+                        case 'radio':
+                            field = form.querySelector("[name=" + name.replace("_", "") + "][value=" + json[name] + "]");
+                            if (field) {
+                                field.checked = true;
+                            } else {
+                                console.warn(`Campo do tipo radio não encontrado para name=${name} e value=${json[name]}`);
+                            }
+                            break;
 
-                            case 'checkbox':
-                                field.checked = json[name];
-                                break;
+                        case 'checkbox':
+                            field.checked = json[name];
+                            break;
 
-                            default:
-                                field.value = json[name];
-                                break;
-                        }
-
+                        default:
+                            field.value = json[name];
+                            break;
                     }
 
                 }
 
-                this.formUpdateEl.querySelector(".photo").src = json._photo;
+            }
 
-                this.showPanelUpdate();
+            this.formUpdateEl.querySelector(".photo").src = json._photo;
 
-            })
-        }
+            this.showPanelUpdate();
+
+        })
+    }
 
     showPanelCreate() {
-            document.querySelector("#box-user-create").style.display = "block";
-            document.querySelector("#box-user-update").style.display = "none";
-        }
+        document.querySelector("#box-user-create").style.display = "block";
+        document.querySelector("#box-user-update").style.display = "none";
+    }
 
     showPanelUpdate() {
-            document.querySelector("#box-user-create").style.display = "none";
-            document.querySelector("#box-user-update").style.display = "block";
-        }
+        document.querySelector("#box-user-create").style.display = "none";
+        document.querySelector("#box-user-update").style.display = "block";
+    }
 
     updateCount() {
 
-            let numberUsers = 0;
-            let numberAdmin = 0;
+        let numberUsers = 0;
+        let numberAdmin = 0;
 
-            [...this.tableEl.children].forEach(tr => {
+        [...this.tableEl.children].forEach(tr => {
 
-                numberUsers++;
+            numberUsers++;
 
-                console.log
+            console.log
 
-                try {
-                    if (!tr.dataset.user) return;
-                    let user = JSON.parse(tr.dataset.user);
-                    if (user._admin) numberAdmin++;
-                } catch (e) {
-                    console.warn('Erro ao interpretar dados do usuário:', e);
-                }
+            try {
+                if (!tr.dataset.user) return;
+                let user = JSON.parse(tr.dataset.user);
+                if (user._admin) numberAdmin++;
+            } catch (e) {
+                console.warn('Erro ao interpretar dados do usuário:', e);
+            }
 
-            });
+        });
 
-            document.querySelector("#number-users").innerHTML = numberUsers;
-            document.querySelector("#number-users-admin").innerHTML = numberAdmin;
+        document.querySelector("#number-users").innerHTML = numberUsers;
+        document.querySelector("#number-users-admin").innerHTML = numberAdmin;
 
-        }
+    }
 
 }
