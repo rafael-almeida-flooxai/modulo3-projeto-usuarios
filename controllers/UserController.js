@@ -199,9 +199,29 @@ class UserController {
 
     }
 
+    insert(data) {
+
+              let users = [];
+
+        if (sessionStorage.getItem("users")) {
+
+            users = JSON.parse(sessionStorage.getItem("users"));
+
+        }
+
+  
+
+        users.push(data);
+
+        sessionStorage.setItem("user", JSON.stringify(users)); 
+
+    }
+
     addLine(dataUser) {
 
         let tr = document.createElement('tr');
+
+        this.insert();
 
         tr.dataset.user = JSON.stringify(dataUser);
 
