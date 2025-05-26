@@ -32,22 +32,48 @@ class UserController {
 
             let tr = this.tableEl.rows[index];
 
-            tr.dataset.user = JSON.stringify();
+            let userOld = JSON.parse(tr.dataset.user);
 
-            tr.innerHTML = `
-                <td><img src="${values.photo}" alt="User Image" class="img-circle img-sm"></td>
-                <td>${values.name}</td>
-                <td>${values.email}</td>
-                <td>${(values.admin) ? 'Sim' : 'Não'}</td>
-                <td>${Utils.dateFormat(values.register)}</td>
+            let result = Object.assign({}, userOld, values)
+
+            this.getPhoto(this.formUpdateEl).then
+                ((content) => {
+
+                    if (!values.photo) {
+                        result._photo = userOld._photo;
+                    } else {
+                        result._photo = content;
+                    }
+
+                    tr.dataset.user = JSON.stringify();
+
+                    tr.innerHTML = `
+                <td><img src="${values._photo}" alt="User Image" class="img-circle img-sm"></td>
+                <td>${values._name}</td>
+                <td>${values._email}</td>
+                <td>${(values._admin) ? 'Sim' : 'Não'}</td>
+                <td>${Utils.dateFormat(values._register)}</td>
                 <td>
                 <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
                 <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
             </td>
         `;
 
-            this.addEventsTr();
-            this.updateCount();
+                    this.addEventsTr();
+                    this.updateCount();
+
+                    this.formUpdateEl.reset();
+
+                    btn.disabled = false;
+
+                    this.showPanelCreate();
+
+                },
+                    (e) => {
+
+                        console.error(e);
+
+                    });
 
 
         })
@@ -71,7 +97,7 @@ class UserController {
                 return false;
             }
 
-            this.getPhoto().then
+            this.getPhoto(this.formEl).then
                 ((content) => {
 
                     values.photo = content;
@@ -239,11 +265,11 @@ class UserController {
                             break;
                     }
 
-                    field.value = json[name];
-
                 }
 
             }
+
+            this.formUpdateEl.querySelector(".photo").src = json._photo;
 
             this.showPanelUpdate();
 
