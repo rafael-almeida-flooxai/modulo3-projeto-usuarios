@@ -95,6 +95,8 @@ class UserController {
 
                     values.photo = content;
 
+                    values.save();
+
                     this.addLine(values);
 
                     this.formEl.reset();
@@ -216,22 +218,6 @@ class UserController {
             this.addLine(user);
 
         });
-
-    }
-
-    insert(data) {
-
-        let users = [];
-
-        if (sessionStorage.getItem("users")) {
-
-            users = JSON.parse(sessionStorage.getItem("users"));
-
-        }
-
-        users.push(data);
-
-        sessionStorage.setItem("user", JSON.stringify(users));
 
     }
 

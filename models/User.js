@@ -2,6 +2,7 @@ class User {
 
     constructor(a, gender, birth, country, email, password, photo, admin) {
 
+        this._id;
         this._name = a;
         this._gender = gender;
         this._birth = birth;
@@ -12,6 +13,10 @@ class User {
         this._admin = admin;
         this._register = new Date();
 
+    }
+
+    get id() {
+        return this._id;
     }
 
     get register() {
@@ -50,26 +55,66 @@ class User {
         return this._admin;
     }
 
-    set photo (value) {
+    set photo(value) {
         this._photo = value;
     }
 
     loadFromJSON(json) {
 
-        for (let name in json){
+        for (let name in json) {
 
-            switch(name){
+            switch (name) {
 
                 case '_register':
-                this[name] = json[name];
-                break;
+                    this[name] = json[name];
+                    break;
 
                 default:
-                this[name] = json[name];
+                    this[name] = json[name];
             }
-            
+
         }
 
     }
 
+    getNewId() {
+        if (!window.id) window.id = 0;
+
+        id++;
+
+        return id;
+    }
+
+    save() {
+
+
+
+        let users = User.getUsersStorage();
+
+        if (this.id > 0) {
+
+            users.map(u => {
+
+                if (u._id == this.id) {
+                    u = this;
+                }
+
+
+                return u;
+            })
+
+
+
+        } else {
+
+            this.id = this.getNewId();
+
+            users.push(data);
+
+
+        }
+
+        localStorage.setItem("users", JSON.stringify(users));
+        
+    }
 }
