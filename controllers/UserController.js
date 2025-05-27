@@ -225,10 +225,6 @@ class UserController {
 
         let tr = this.getTr(dataUser);
 
-        
-
-        
-
         this.tableEl.appendChild(tr);
 
         this.updateCount();
@@ -265,6 +261,12 @@ class UserController {
 
             if (confirm("Deseja realmente excluir?")) {
 
+                let user = new User();
+
+                user.loadFromJSON(JSON.parse(tr.dataset.user));
+
+                user.remove();
+
                 tr.remove();
 
                 this.updateCount();
@@ -285,6 +287,7 @@ class UserController {
 
                 let field = this.formUpdateEl.querySelector("[name=" + name.replace("_", "") + "]")
 
+                https://github.com/rafael-almeida-flooxai/modulo3-projeto-usuarios
 
 
                 if (field) {
